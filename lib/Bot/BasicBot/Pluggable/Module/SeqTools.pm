@@ -37,8 +37,6 @@ sub told {
 
     return if not ( @commands and $seq );
 
-    return invalid_dna_msg() unless $self->is_valid($seq);
-
     # Get the result for the innermost command
     my $message = apply(shift @commands, $seq, @args);
 
@@ -75,6 +73,8 @@ Translates DNA to protein. C<FRAME> is the reading frame, must be either
 
 sub translate {
     my ($seq, $frame) = @_;
+
+    return invalid_dna_msg() unless is_dna($seq);
 
     $frame //= 0;
 
@@ -117,6 +117,8 @@ Calculate the base pair complement of the DNA sequence.
 
 sub complement {
     my ($seq) = shift;
+
+    return invalid_dna_msg() unless is_dna($seq);
 
     # For now, only [GATCU] will come this way because of previous
     # validation, but I'll still keep this sub like this just in case
@@ -192,6 +194,8 @@ sub tm {
 
     my ($seq, @args) = @_;
 
+    return invalid_dna_msg() unless is_dna($seq);
+
     my $salt  = shift @args || 0.05;
     my $oligo = shift @args || 0.00000025;
 
@@ -212,10 +216,16 @@ sub tm {
     return $tm ? sprintf("%.2f ºC", $tm) : $error;
 }
 
-sub is_valid {
-    my ($self, $seq) = @_;
-
+sub is_dna {
+    my $seq = shift;
     return $seq !~ /[^ACGTUacgtu]/;
+}
+
+sub is_protein {
+    my $seq = shift;
+
+    return $seq !~ /[^ACDEFGHIKLMNPQRSTVWYacdefghiklmnpqrstvwy]/;
+
 }
 
 sub invalid_dna_msg {
