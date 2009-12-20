@@ -5,8 +5,6 @@ use Try::Tiny;
 use Bio::Seq;
 use Bio::SeqFeature::Primer;
 
-my $Previous; # Remember last thing said
-
 sub said {
     my ($self, $msg) = @_;
 
@@ -19,15 +17,36 @@ sub said {
         tm
     )];
 
-    my ($command, $seq, @args) = split /\s+/, $msg->{body};
+    my (@tokens) = split /\s+/, $msg->{body};
 
-    $Previous = $command;
+    my @commands;
 
-    unless ( $command ~~ @$commands and $seq ) { return }
+    # extract all the commands
+    while ( $tokens[0] ~~ @$commands ) {
+        unshift @commands, shift @tokens;
+    }
 
-    $seq = $Previous if $seq eq '^^';
+    # The rest should be a sequence and possibly arguments
+    my ($seq, @args) = @tokens;
+
+    return if not ( @commands and $seq );
 
     return invalid_dna_msg() unless $self->is_valid($seq);
+
+    # Get the result for the innermost command
+    my $message = apply( shift @commands, $seq, @args );
+
+    # If there are commands left to apply, do it with the previous
+    # return value.
+    while (my $command = shift @commands) {
+        $message = apply($command, $message);
+    }
+
+    return $message;
+}
+
+sub apply {
+    my ($command, $seq, @args) = @_;
 
     given ($command) {
         when ('translate'  )   { return translate  ($seq, @args) }
