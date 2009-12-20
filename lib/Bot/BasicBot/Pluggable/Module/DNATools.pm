@@ -11,7 +11,7 @@ use Bio::SeqFeature::Primer;
 sub told {
     my ($self, $msg) = @_;
 
-    # They address us specifically, do nothing.
+    # Unless they address us specifically, do nothing.
     return unless $msg->{address};
 
     state $commands = [qw(
@@ -142,26 +142,6 @@ sub revcomp {
     return reverse_str(complement(shift));
 }
 
-sub is_valid {
-    my ($self, $seq) = @_;
-
-    return $seq !~ /[^ACGTUacgtu]/;
-}
-
-sub invalid_dna_msg {
-
-    state $messages = [
-        "Your DNA input is ALL WRONG!",
-        "I.. I think that's not quite right.",
-        "Mmh. Please check that sequence, I don't like it.",
-        "Dude. Check your purines, polymerases wouldn't touch that with a ten-foot pole.",
-        "No, no NOOO! Horrible input. I'm ashamed for both of us.",
-        "If that's supposed to represent a polymer of nucleotides, then I'm the digital reincarnation of Evita.",
-    ];
-
-    return $messages->[rand @$messages];
-}
-
 =method composition
 
     composition <seq>
@@ -230,6 +210,26 @@ sub tm {
     };
 
     return $tm ? sprintf("%.2f ºC", $tm) : $error;
+}
+
+sub is_valid {
+    my ($self, $seq) = @_;
+
+    return $seq !~ /[^ACGTUacgtu]/;
+}
+
+sub invalid_dna_msg {
+
+    state $messages = [
+        "Your DNA input is ALL WRONG!",
+        "I.. I think that's not quite right.",
+        "Mmh. Please check that sequence, I don't like it.",
+        "Dude. Check your purines, polymerases wouldn't touch that with a ten-foot pole.",
+        "No, no NOOO! Horrible input. I'm ashamed for both of us.",
+        "If that's supposed to represent a polymer of nucleotides, then I'm the digital reincarnation of Evita.",
+    ];
+
+    return $messages->[rand @$messages];
 }
 
 sub help {
