@@ -23,7 +23,7 @@ sub said {
 
     $Previous = $command;
 
-    unless ( $command ~~ @$commands or !$seq ) { return }
+    unless ( $command ~~ @$commands and $seq ) { return }
 
     $seq = $Previous if $seq eq '^^';
 
