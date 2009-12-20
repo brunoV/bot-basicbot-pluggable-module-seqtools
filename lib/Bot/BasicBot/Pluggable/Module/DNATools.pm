@@ -172,7 +172,7 @@ sub tm {
 sub help {
 
     my $usage = <<END;
-Various tools for DNA sequences: translation, reverse complement, composition, etc.
+Various tools for DNA sequences: translation, reverse complement, composition, etc. Must address me directly.
 Usage:
 
     translate   <seq> [FRAME] # Translates DNA to protein
