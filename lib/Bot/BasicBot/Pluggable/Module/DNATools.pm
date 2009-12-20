@@ -35,7 +35,7 @@ sub said {
         when ('complement' )   { return complement ($seq)        }
         when ('revcomp'    )   { return revcomp    ($seq)        }
         when ('composition')   { return composition($seq)        }
-        when ('tm'         )   { return tm         ($seq)        }
+        when ('tm'         )   { return tm         ($seq, @args) }
     }
 }
 
@@ -125,12 +125,26 @@ sub composition {
 
 sub tm {
 
-    my $seq = shift;
+    my ($seq, @args) = @_;
 
-    my $tm = try   { Bio::SeqFeature::Primer->new( -seq => $seq )->Tm }
-             catch { return "Something went wrong" };
+    my $salt  = shift @args || 0.05;
+    my $oligo = shift @args || 0.00000025;
 
-    return sprintf("%.2f ºC", $tm);
+    my $error;
+
+    my $tm = try   {
+        Bio::SeqFeature::Primer->new( -seq => $seq  )
+            ->Tm( -salt  => $salt,  -oligo => $oligo);
+    }
+    catch {
+
+        # If we are here, most probably the Tm(@args) are wrong
+        $error = "Wrong arguments: tm <seq> [salt] [oligo] (in Molar)";
+
+        return;
+    };
+
+    return $tm ? sprintf("%.2f ºC", $tm) : $error;
 }
 
 sub help {
@@ -144,6 +158,7 @@ Usage:
     revcomp     <seq>         # Reverse complement
     reverse     <seq>         # Reverse
     complement  <seq>         # Base pair complement
+    tm          <seq>         # Calculate the melting temperature
 END
 
     return $usage;
