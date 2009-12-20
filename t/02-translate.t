@@ -17,7 +17,4 @@ like ( $bot->tell_indirect('translate ATG  5'   ), qr/^You.*/ );
 like ( $bot->tell_indirect('translate ATG -1'   ), qr/^You.*/ );
 like ( $bot->tell_indirect('translate ATG momma'), qr/^You.*/ );
 
-#jis ( $bot->tell_indirect('foo'), 'bar');
-#jis ( $bot->tell_private('foo'),  'bar');
-
 done_testing();

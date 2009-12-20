@@ -10,7 +10,4 @@ is $bot->tell_indirect('composition ACGT'),
 
 is $bot->tell_indirect('composition AAaa'), 'A:100.0% ';
 
-#jis ( $bot->tell_indirect('foo'), 'bar');
-#jis ( $bot->tell_private('foo'),  'bar');
-
 done_testing();

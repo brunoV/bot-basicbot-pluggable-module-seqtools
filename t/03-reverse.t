@@ -9,7 +9,4 @@ is ( $bot->tell_indirect('foo ATG'   ), '');
 
 is ( $bot->tell_indirect('reverse ATG'), 'GTA' );
 
-#jis ( $bot->tell_indirect('foo'), 'bar');
-#jis ( $bot->tell_private('foo'),  'bar');
-
 done_testing();

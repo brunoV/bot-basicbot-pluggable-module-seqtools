@@ -15,9 +15,4 @@ like $bot->tell_indirect('tm reverse complement GAATTCCGGCCGGT'), $tm;
 is $bot->tell_indirect('reverse complement reverse complement GAATCCG'),
    'GAATCCG';
 
-
-
-#jis ( $bot->tell_indirect('foo'), 'bar');
-#jis ( $bot->tell_private('foo'),  'bar');
-
 done_testing();
