@@ -7,6 +7,7 @@ use Modern::Perl;
 use Try::Tiny;
 use Bio::Seq;
 use Bio::SeqFeature::Primer;
+use Bio::Tools::SeqStats;
 
 sub told {
     my ($self, $msg) = @_;
@@ -21,6 +22,7 @@ sub told {
         revcomp
         composition
         tm
+        mw
     )];
 
     my (@tokens) = split /\s+/, $msg->{body};
@@ -59,6 +61,7 @@ sub apply {
         when ('revcomp'    )   { return revcomp    ($seq)        }
         when ('composition')   { return composition($seq)        }
         when ('tm'         )   { return tm         ($seq, @args) }
+        when ('mw'         )   { return mw         ($seq)        }
     }
 }
 
@@ -216,6 +219,34 @@ sub tm {
     return $tm ? sprintf("%.2f ºC", $tm) : $error;
 }
 
+=method mw
+
+    mw <seq>
+
+Calculate the molecular weight of the sequence. It uses L<Bio::Tools::SeqStats>.
+
+=cut
+
+sub mw {
+    my $seq = shift;
+
+    return "That doesn't look like DNA nor Protein dude"
+        unless( is_dna($seq) or is_protein($seq) );
+
+    my $error;
+    my $mw = try {
+        Bio::Tools::SeqStats->get_mol_wt(Bio::Seq->new( -seq => $seq ))
+    } catch { ($error) = split /\n/, $_ };
+
+    return $error if $error;
+
+    # get_mol_wt returns the upper and lower bounds of the MW.
+    # Just KISS and return the average.
+    $mw = ($mw->[0] + $mw->[1])/2;
+
+    return sprintf("MW: %.2f", $mw);
+}
+
 sub is_dna {
     my $seq = shift;
     return $seq !~ /[^ACGTUacgtu]/;
@@ -254,6 +285,7 @@ Usage:
     reverse     <seq>         # Reverse
     complement  <seq>         # Base pair complement
     tm          <seq>         # Calculate the melting temperature
+    mw          <seq>         # Compute the molecular weight
 END
 
     return $usage;
