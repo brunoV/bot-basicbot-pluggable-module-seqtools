@@ -4,7 +4,6 @@ use Modern::Perl;
 use Try::Tiny;
 use Bio::Seq;
 use Bio::SeqFeature::Primer;
-use Data::Dumper;
 
 sub told {
     my ($self, $msg) = @_;
@@ -38,7 +37,7 @@ sub told {
     return invalid_dna_msg() unless $self->is_valid($seq);
 
     # Get the result for the innermost command
-    my $message = apply( shift @commands, $seq, @args );
+    my $message = apply(shift @commands, $seq, @args);
 
     # If there are commands left to apply, do it with the previous
     # return value.
