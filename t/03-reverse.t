@@ -5,8 +5,8 @@ use Test::Bot::BasicBot::Pluggable;
 my $bot = Test::Bot::BasicBot::Pluggable->new();
 $bot->load('DNATools');
 
-is ( $bot->tell_indirect('foo ATG'   ), '');
+is ( $bot->tell_direct('foo ATG'   ), '');
 
-is ( $bot->tell_indirect('reverse ATG'), 'GTA' );
+is ( $bot->tell_direct('reverse ATG'), 'GTA' );
 
 done_testing();

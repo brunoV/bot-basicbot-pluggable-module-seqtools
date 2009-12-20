@@ -4,9 +4,13 @@ use Modern::Perl;
 use Try::Tiny;
 use Bio::Seq;
 use Bio::SeqFeature::Primer;
+use Data::Dumper;
 
-sub said {
+sub told {
     my ($self, $msg) = @_;
+
+    # They address us specifically, do nothing.
+    return unless $msg->{address};
 
     state $commands = [qw(
         translate
