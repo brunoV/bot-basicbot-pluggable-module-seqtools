@@ -3,7 +3,7 @@ use base 'Bot::BasicBot::Pluggable::Module';
 use Modern::Perl;
 use Try::Tiny;
 use Bio::Seq;
-use Data::Dumper;
+use Bio::SeqFeature::Primer;
 
 my $Previous; # Remember last thing said
 
@@ -16,6 +16,7 @@ sub said {
         complement
         revcomp
         composition
+        tm
     )];
 
     my ($command, $seq, @args) = split /\s+/, $msg->{body};
@@ -34,6 +35,7 @@ sub said {
         when ('complement' )   { return complement ($seq)        }
         when ('revcomp'    )   { return revcomp    ($seq)        }
         when ('composition')   { return composition($seq)        }
+        when ('tm'         )   { return tm         ($seq)        }
     }
 }
 
@@ -119,6 +121,16 @@ sub composition {
     }
 
     return $result_str;
+}
+
+sub tm {
+
+    my $seq = shift;
+
+    my $tm = try   { Bio::SeqFeature::Primer->new( -seq => $seq )->Tm }
+             catch { return "Something went wrong" };
+
+    return sprintf("%.2f ºC", $tm);
 }
 
 sub help {
