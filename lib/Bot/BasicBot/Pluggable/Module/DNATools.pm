@@ -69,7 +69,7 @@ sub apply {
     translate <seq> FRAME
 
 Translates DNA to protein. C<FRAME> is the reading frame, must be either
-0 (default), 1, or 2.
+0 (default), 1, or 2. Uses L<Bio::Seq> to do the job.
 
 =cut
 
@@ -255,15 +255,16 @@ __END__
 
 =head1 DESCRIPTION
 
-This plugin will give your Bot::BasicBot::Pluggable bot the ability to
-perform the most common conversions and analysis on DNA/RNA sequences.
+This plugin will give your L<Bot::BasicBot::Pluggable> bot the ability
+to perform the most common conversions and analysis on DNA/RNA
+sequences.
 
 The bot should always be addressed directly.
 
 =head1 NESTABLE COMMANDS
 
 Whenever it makes sense, commands can be nested. If one command returns
-a dna sequence, it can be put as an argument of an outer command, as so:
+a DNA sequence, it can be put as an argument of an outer command, as so:
 
     command1 command2 <seq>
 
