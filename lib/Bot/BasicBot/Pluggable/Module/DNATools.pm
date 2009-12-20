@@ -1,4 +1,7 @@
 package Bot::BasicBot::Pluggable::Module::DNATools;
+
+# ABSTRACT: Give your bot basic DNA munging skills
+
 use base 'Bot::BasicBot::Pluggable::Module';
 use Modern::Perl;
 use Try::Tiny;
@@ -61,6 +64,15 @@ sub apply {
     }
 }
 
+=method translate
+
+    translate <seq> FRAME
+
+Translates DNA to protein. C<FRAME> is the reading frame, must be either
+0 (default), 1, or 2.
+
+=cut
+
 sub translate {
     my ($seq, $frame) = @_;
 
@@ -81,11 +93,27 @@ sub translate {
     return $translated;
 }
 
+=method reverse
+
+    reverse <seq>
+
+Reverse the string.
+
+=cut
+
 sub reverse_str {
     my ($str) = @_;
 
     return scalar reverse $str;
 }
+
+=method complement
+
+    complement <seq>
+
+Calculate the base pair complement of the DNA sequence.
+
+=cut
 
 sub complement {
     my ($seq) = shift;
@@ -98,6 +126,17 @@ sub complement {
 
     return $seq;
 }
+
+=method revcomp
+
+    revcomp <seq>
+
+Calculate the reverse complement of the DNA sequence. It's the same as
+calling:
+
+    reverse complement <seq>
+
+=cut
 
 sub revcomp {
     return reverse_str(complement(shift));
@@ -123,6 +162,14 @@ sub invalid_dna_msg {
     return $messages->[rand @$messages];
 }
 
+=method composition
+
+    composition <seq>
+
+Calculate the base-pair composition of the argument sequence.
+
+=cut
+
 sub composition {
     my $seq = uc shift or return;
 
@@ -144,6 +191,22 @@ sub composition {
 
     return $result_str;
 }
+
+=method tm
+
+    tm <seq> [SALT] [OLIGO]
+
+Calculate the melting temperature of the argument sequence, in Celsius.
+
+Optionally, you can specify the total salt concentration in Molar
+(defaults to 0.05), and/or the total oligonucleotide concentration (also
+in Molar, defaults to 0.00000025.
+
+It uses L<Bio::SeqFeature::Primer> under the hood; check the
+documentation there for more information on the method used for the Tm
+estimation.
+
+=cut
 
 sub tm {
 
@@ -187,3 +250,45 @@ END
 }
 
 1;
+
+__END__
+
+=head1 DESCRIPTION
+
+This plugin will give your Bot::BasicBot::Pluggable bot the ability to
+perform the most common conversions and analysis on DNA/RNA sequences.
+
+The bot should always be addressed directly.
+
+=head1 NESTABLE COMMANDS
+
+Whenever it makes sense, commands can be nested. If one command returns
+a dna sequence, it can be put as an argument of an outer command, as so:
+
+    command1 command2 <seq>
+
+This is parsed as:
+
+    command1( command2( <seq> ) )
+
+For example, you can do:
+
+    composition complement GGGGGG
+    C: 100.0%
+
+However, currently only the innermost command can take optional
+arguments. So this:
+
+    translate reverse GATTCCG 2
+
+Will be parsed as:
+
+    translate( reverse GATTCCG 2 )
+
+instead of:
+
+    translate( reverse(GATTCCG), 2 )
+
+If the need arises, it'll be fixed in the future.
+
+=cut
