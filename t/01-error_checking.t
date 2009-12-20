@@ -3,11 +3,11 @@ use Test::Exception;
 use Test::Bot::BasicBot::Pluggable;
 
 my $bot = Test::Bot::BasicBot::Pluggable->new();
-$bot->load('DNATools');
+$bot->load('SeqTools');
 
 is ( $bot->tell_direct('foo ATG'   ), '');
 
-like( $bot->tell_direct('help dnatools'), qr/^Various.*/ );
+like( $bot->tell_direct('help seqtools'), qr/^Various.*/ );
 
 my @commands = qw(translate reverse revcomp complement composition);
 

@@ -1,6 +1,6 @@
-package Bot::BasicBot::Pluggable::Module::DNATools;
+package Bot::BasicBot::Pluggable::Module::SeqTools;
 
-# ABSTRACT: Give your bot basic DNA munging skills
+# ABSTRACT: Give your bot basic DNA/Protein munging skills
 
 use base 'Bot::BasicBot::Pluggable::Module';
 use Modern::Perl;
@@ -176,7 +176,7 @@ sub composition {
 
     tm <seq> [SALT] [OLIGO]
 
-Calculate the melting temperature of the argument sequence, in Celsius.
+Calculate the melting temperature of the argument DNA sequence, in Celsius.
 
 Optionally, you can specify the total salt concentration in Molar
 (defaults to 0.05), and/or the total oligonucleotide concentration (also
@@ -256,7 +256,7 @@ __END__
 =head1 DESCRIPTION
 
 This plugin will give your L<Bot::BasicBot::Pluggable> bot the ability
-to perform the most common conversions and analysis on DNA/RNA
+to perform the most common conversions and analysis on DNA/RNA/Protein
 sequences.
 
 The bot should always be addressed directly.

@@ -3,7 +3,7 @@ use Test::Exception;
 use Test::Bot::BasicBot::Pluggable;
 
 my $bot = Test::Bot::BasicBot::Pluggable->new();
-$bot->load('DNATools');
+$bot->load('SeqTools');
 
 my $temperature = qr/^\-*\d+\.\d{2} ºC.*/;
 
