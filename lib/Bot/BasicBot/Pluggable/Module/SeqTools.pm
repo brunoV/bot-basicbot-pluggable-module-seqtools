@@ -105,9 +105,11 @@ Reverse the string.
 =cut
 
 sub reverse_str {
-    my ($str) = @_;
+    my ($seq) = @_;
 
-    return scalar reverse $str;
+    return invalid_dna_msg() unless is_dna($seq);
+
+    return scalar reverse $seq;
 }
 
 =method complement
@@ -144,7 +146,11 @@ calling:
 =cut
 
 sub revcomp {
-    return reverse_str(complement(shift));
+    my $seq = shift;
+
+    return invalid_dna_msg() unless is_dna($seq);
+
+    return reverse_str(complement($seq));
 }
 
 =method composition
