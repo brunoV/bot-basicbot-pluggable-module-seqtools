@@ -236,7 +236,7 @@ Calculate the molecular weight of the sequence. It uses L<Bio::Tools::SeqStats>.
 sub mw {
     my $seq = shift;
 
-    return "That doesn't look like DNA nor Protein dude"
+    return "That doesn't look like DNA nor Protein"
         unless( is_dna($seq) or is_protein($seq) );
 
     my $error;
